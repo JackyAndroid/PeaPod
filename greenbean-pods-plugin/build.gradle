@@ -1,0 +1,38 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+def repoVersion = '0.0.1'
+
+task exportLocalRepo(type: Upload) {
+    configuration = configurations.archives
+    uploadDescriptor = true
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../repo'))
+            pom.project {
+                groupId "greenbean.pods"
+                artifactId "greenbean-pods-plugin"
+                version repoVersion
+                description "GreenBeanPods"
+            }
+        }
+    }
+}
+
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourceJar
+}
