@@ -6,78 +6,23 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+apply plugin: 'com.novoda.bintray-release'
 
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-
-version = "0.0.1"
-
-def siteUrl = 'https://github.com/JackyAndroid/GreenBeanPods'
-def gitUrl = 'https://github.com/JackyAndroid/GreenBeanPods.git'
-
-group = "tech.jackywang"
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'jar'
-                name 'greenbean-pods'
-                url siteUrl
-                licenses {
-                    license {
-                        name 'GPL 3.0'
-                        url 'GPL 3.0'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'jackyjacky'
-                        name 'jackywang'
-                        email 'jacky.android@foxmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.9'
     }
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-artifacts {
-    archives sourcesJar
-}
-
-bintray {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        userOrg = "jackyjacky"
-        repo = "maven"
-        name = "GreenBeanPods"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["GPL-3.0"]
-        publish = true
-    }
-}
-
-javadoc {
-    options {
-        encoding "UTF-8"
-        charSet 'UTF-8'
-    }
+publish {
+    userOrg = 'jackyjacky'
+    groupId = 'tech.jackywang'
+    artifactId = 'greenbean-pods-plugin'
+    publishVersion = '0.0.1'
+    licences = ["GPL-3.0"]
+    desc = 'https://github.com/JackyAndroid/GreenBeanPods'
+    website = 'https://github.com/JackyAndroid/GreenBeanPods'
 }
