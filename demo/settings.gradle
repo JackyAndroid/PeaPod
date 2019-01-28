@@ -1,1 +1,12 @@
 include ':app'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'tech.jackywang:greenbean-pods-plugin:0.0.1'
+    }
+}
+
+apply plugin: 'greenbean-pods-plugin'
