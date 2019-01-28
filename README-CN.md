@@ -1,9 +1,89 @@
 ## 绿豆荚
 
-[ ![Download](https://api.bintray.com/packages/jackyjacky/maven/GreenBeanPods/images/download.svg?version=0.0.1) ](https://bintray.com/jackyjacky/maven/GreenBeanPods/0.0.1/link)
+[ ![Download](https://api.bintray.com/packages/jackyjacky/maven/greenbean-pods-plugin/images/download.svg?version=0.0.1) ](https://bintray.com/jackyjacky/maven/greenbean-pods-plugin/0.0.1/link)
 
-绿豆荚是什么？
+#### 绿豆荚是什么？
 
 Android依赖的仓库只能为二进制依赖，形式为jar或者aar。但是如果我们对其中的仓库修改bug或者添加特性，不得不先发布仓库、升级业务端版本号、验证，这个流程经常性的反复出现。那我们能不能一键把线上的依赖替换为本地的依赖？绿豆荚依赖管理器就是解决这一问题。
 
-使用
+#### 用法
+
+在setting.gradle中添加：
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'tech.jackywang:greenbean-pods-plugin:0.0.1'
+    }
+}
+
+apply plugin: 'greenbean-pods-plugin'
+```
+
+在build.gradle中添加：
+
+```groovy
+buildscript {
+    // ...
+    dependencies {
+        classpath 'tech.jackywang:greenbean-pods-plugin:0.0.1'
+    }
+}
+
+allprojects {
+    apply plugin: 'greenbean-pods-plugin'
+    // ...
+}
+```
+
+新建文件夹：greenbean.pods，然后新建配置文件：PodsSpec.groovy，内容如下：
+
+```groovy
+import greenbean.pods.GreenBean
+
+@groovy.transform.BaseScript GreenBean pods
+
+/**
+ * 依赖描述文件
+ * <pre>
+ * {@code
+ * pod{
+ * on_off //模块开关
+ * name   //模块名称
+ * group  //模块Group
+ * path   //模块本地路径，仅支持本工程父目录向下扩展
+ * branch //模块仓库分支，根据path切换分支
+ * cmd //命令hook，在include之前执行
+ * excludes //模块的线上依赖名称
+ * buildTypes //模块的构建类型
+ * seeds //模块依赖的子模块，必须与子模块的name字段匹配
+ *}*}
+ * </pre>
+ */
+
+// 以下为示例内容，如果想动态调试app模块中的名为‘greenbean-pods-plugin-test-module’的线上模块，则先配置如下。
+pod {
+    on_off true
+    name 'greenbean-pods-plugin-test-module'
+    group 'tech.jackywang'
+    path 'test-module/library'
+}
+
+pod {
+    on_off true
+    name 'app'
+    seeds 'greenbean-pods-plugin-test-module'
+}
+```
+
+配置完成，sync整个工程，线上模块将会以源码的方式包含进工程，实现源码调试模块的能力。
+
+
+
+
+
+
+
