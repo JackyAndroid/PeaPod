@@ -8,7 +8,7 @@
 
 这么长的流程经常出现，那我们能不能直接在主工程中修改maven仓库？修复、发布功能的同时能直接在主工程验证？在[美团外卖架构演进](https://tech.meituan.com/2018/03/16/meituan-food-delivery-android-architecture-evolution.html)文章中有讲到类似的问题，如下：
 
-![image-20190129101936404](/Users/wangshichang/Workspace/GitHub/GreenBeanPods/README-CN.assets/image-20190129101936404.png)
+![image-20190129101936404](pic/image-20190129101936404.png)
 
 绿豆荚依赖管理器可以一键把线上的aar依赖切换为本地依赖，实现类似iOS cocoapods依赖管理器直接依赖仓库源码。
 
