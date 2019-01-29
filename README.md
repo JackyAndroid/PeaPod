@@ -5,9 +5,11 @@
 
 #### What is GreenBeanPods?
 
-Android relies on third-party repositories as binary dependencies. If we want to repair or add features to the repository, we have to publish the repositories, and then update the repositories version number at the business side to verify. This process is sometimes repeated frequently.
+The origin of greenbeanpods is that the main project needs to rely on a large number of internal maven repositories, usually there will be dozens. At this time, there is a problem. If the maven repository in the main project needs to be upgraded or fixed, what should I do?
 
-It is to solve this problem
+Generally, it is first modified in the git repo of the maven repository, then released to the maven center of the intranet, and then upgrade the maven repository version number in the main project, and then verify whether the problem is fixed and whether the function meets the requirements.
+
+Greenbeanpods can switch online maven repo to local dependencies with one click, which is convenient for maven repo new requirements development and problem repair. Even after we can implement the iOS cocoapods dependency manager function, the one-click switch source code is implemented for the maven repository of the whole network.
 
 #### Usage
 
