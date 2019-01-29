@@ -21,14 +21,14 @@ import greenbean.pods.GreenBean
  */
 
 pod {
-    on_off true
+    on_off false
     name 'greenbean-pods-plugin-test-module'
     group 'tech.jackywang'
     path 'test-module/library'
 }
 
 pod {
-    on_off true
+    on_off false
     name 'app'
     seeds 'greenbean-pods-plugin-test-module'
 }
