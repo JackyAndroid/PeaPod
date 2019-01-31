@@ -13,7 +13,8 @@
 绿豆荚依赖管理器也是实现类似的功能，一键把线上maven仓库切换为本地依赖，方便maven仓库新需求开发、问题修复。甚至之后可以实现类似iOS cocoapods依赖管理器功能，对全网的maven仓库实现一键切换源码。
 
 提问：
-1. [实际使用场景及原理是什么？](https://github.com/JackyAndroid/GreenBeanPods/issues/1)
+1. [实际使用场景是什么？](https://github.com/JackyAndroid/GreenBeanPods/issues/1)
+2. [实现原理是什么？](http://www.jackywang.tech/2018/05/03/%E6%BA%90%E7%A0%81%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86%E5%99%A8%EF%BC%88%E4%B8%80%EF%BC%89/)
 
 #### 用法
 
