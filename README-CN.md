@@ -20,6 +20,8 @@
 
 **配置**
 
+在gradle.properties中添加：`greenbean_pods_version=0.0.1`
+
 在setting.gradle中添加：
 
 ```groovy
@@ -28,7 +30,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'tech.jackywang:greenbean-pods-plugin:0.0.1'
+        classpath "tech.jackywang:greenbean-pods-plugin:${greenbean_pods_version}"
     }
 }
 
@@ -41,7 +43,7 @@ apply plugin: 'greenbean-pods-plugin'
 buildscript {
     // ...
     dependencies {
-        classpath 'tech.jackywang:greenbean-pods-plugin:0.0.1'
+        classpath "tech.jackywang:greenbean-pods-plugin:${greenbean_pods_version}"
     }
 }
 
