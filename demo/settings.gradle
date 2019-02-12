@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'tech.jackywang:greenbean-pods-plugin:0.0.1'
+        classpath "tech.jackywang:greenbean-pods-plugin:${greenbean_pods_version}"
     }
 }
 
