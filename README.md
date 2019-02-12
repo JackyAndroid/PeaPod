@@ -13,6 +13,8 @@ Greenbeanpods can switch online maven repo to local dependencies with one click,
 
 #### Usage
 
+Add in gradle.properties: `greenbean_pods_version=0.0.1`
+
 Add in setting.gradle:
 
 ```groovy
@@ -21,7 +23,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'tech.jackywang:greenbean-pods-plugin:0.0.1'
+        classpath "tech.jackywang:greenbean-pods-plugin:${greenbean_pods_version}"
     }
 }
 
@@ -34,7 +36,7 @@ Add in build.gradle:
 buildscript {
     // ...
     dependencies {
-        classpath 'tech.jackywang:greenbean-pods-plugin:0.0.1'
+        classpath "tech.jackywang:greenbean-pods-plugin:${greenbean_pods_version}"
     }
 }
 
