@@ -8,7 +8,7 @@
 
 这么长的流程经常出现，那我们能不能直接在主工程中修改maven仓库？修复、发布功能的同时能直接在主工程验证？在[美团外卖架构演进](https://tech.meituan.com/2018/03/16/meituan-food-delivery-android-architecture-evolution.html)文章中有讲到类似的问题，如下：
 
-![image-20190129101936404](pic/image-20190129101936404.png)
+![image-20190129101936404](https://ws1.sinaimg.cn/large/006tNc79gy1g03h7uja1uj31820u0ape.jpg)
 
 绿豆荚依赖管理器也是实现类似的功能，一键把线上maven仓库切换为本地依赖，方便maven仓库新需求开发、问题修复。甚至之后可以实现类似iOS cocoapods依赖管理器功能，对全网的maven仓库实现一键切换源码。
 
@@ -99,20 +99,20 @@ pod {
 
 配置文件：
 
-![image-20190129105234167](pic/image-20190129105234167.png)
+![image-20190129105234167](https://ws3.sinaimg.cn/large/006tNc79gy1g03h8n9773j30ca07474s.jpg)
 
 依赖的maven仓库：
 
-![image-20190129105400191](pic/image-20190129105400191.png)
+![image-20190129105400191](https://ws2.sinaimg.cn/large/006tNc79gy1g03h950910j30an078aao.jpg)
 
 **配置后（本地依赖）**
 
 配置文件：
 
-![image-20190129105604524](pic/image-20190129105604524.png)
+![image-20190129105604524](https://ws1.sinaimg.cn/large/006tNc79gy1g03h9l1jcqj30cs07bdgb.jpg)
 
 依赖的maven仓库：
 
-![image-20190129105815769](pic/image-20190129105815769.png)
+![image-20190129105815769](https://ws4.sinaimg.cn/large/006tNc79gy1g03h9tclg9j30b207q3z0.jpg)
 
 通过配置文件的开关即可以一键切换maven仓库为源码依赖，实现源码调试。
