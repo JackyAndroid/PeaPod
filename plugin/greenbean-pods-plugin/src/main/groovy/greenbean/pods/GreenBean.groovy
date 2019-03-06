@@ -72,6 +72,7 @@ abstract class GreenBean extends Script {
         String name
         String group
         String path
+        String absPath
         String branch
         String cmd
         ArrayList<String> excludes = new ArrayList<>()
@@ -92,6 +93,10 @@ abstract class GreenBean extends Script {
 
         void path(String path) {
             this.path = path
+        }
+
+        void absPath(String absPath) {
+            this.absPath = absPath
         }
 
         void branch(String branch) {

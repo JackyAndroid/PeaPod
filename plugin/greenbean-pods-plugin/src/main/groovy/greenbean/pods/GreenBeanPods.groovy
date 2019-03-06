@@ -52,7 +52,16 @@ class GreenBeanPods implements Plugin<PluginAware> {
         def rootDir = settings.rootDir
         evaluateDSL(rootDir.path + File.separator + dslPath)
         GreenBean.pods.each { pod ->
-            if (pod.on_off && pod.path != null) {
+            if (pod.on_off) {
+                if (pod.path == null && pod.absPath == null) {
+                    return
+                }
+                def path
+                if (pod.path != null) {
+                    path = rootDir.getParent() + File.separator + pod.path
+                } else {
+                    path = pod.absPath
+                }
                 // cmd hook
                 if (pod.cmd != null && !pod.cmd.isEmpty()) {
                     def proc = pod.cmd.execute()
@@ -62,8 +71,7 @@ class GreenBeanPods implements Plugin<PluginAware> {
                 }
                 // 切换分支
                 if (pod.branch != null && !pod.branch.isEmpty()) {
-                    def gitDir = rootDir.getParent() + File.separator + pod.path
-                    String cmd = "git -C " + gitDir + " checkout " + pod.branch
+                    String cmd = "git -C " + path + " checkout " + pod.branch
                     def proc = cmd.execute()
                     def outputStream = new StringBuffer()
                     proc.waitForProcessOutput(outputStream, System.err)
@@ -71,7 +79,6 @@ class GreenBeanPods implements Plugin<PluginAware> {
                 }
                 def projectName = ":" + pod.name
                 settings.include(projectName)
-                String path = settings.rootDir.getParent() + File.separator + pod.path
                 settings.project(projectName).projectDir = new File(path)
                 println("被包含的模块 名字:" + pod.name + " 路径:" + path)
             }

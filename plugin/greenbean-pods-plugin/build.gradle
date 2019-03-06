@@ -17,11 +17,12 @@ buildscript {
     }
 }
 
+// upload cmd: ./gradlew clean build bintrayUpload
 publish {
     userOrg = 'jackyjacky'
     groupId = 'tech.jackywang'
     artifactId = 'greenbean-pods-plugin'
-    publishVersion = '0.0.1'
+    publishVersion = '0.0.3'
     licences = ["GPL-3.0"]
     desc = 'https://github.com/JackyAndroid/GreenBeanPods'
     website = 'https://github.com/JackyAndroid/GreenBeanPods'
