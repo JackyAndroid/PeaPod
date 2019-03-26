@@ -10,7 +10,7 @@ class SpecInternal {
     import xx
     @groovy.transform.BaseScript xx xx
 
-    segment {
+    pod {
         on_off false
         name "sample"
         path "sample/path"
