@@ -1,16 +1,22 @@
 apply plugin: 'groovy'
+apply plugin: 'maven-publish'
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation gradleApi()
+    implementation localGroovy()
+
 }
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = 'tech.jackywang'
+                artifactId = 'peapods'
+                version = '0.0.3'
+                from components.java
+            }
+        }
     }
 }
