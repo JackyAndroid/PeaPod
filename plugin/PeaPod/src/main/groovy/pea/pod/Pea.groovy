@@ -1,4 +1,4 @@
-package greenbean.pods
+package pea.pod
 
 /**
  * DSL 基础脚本
@@ -7,7 +7,7 @@ package greenbean.pods
  * @description Basic Script
  * @since 2018.11.7
  */
-abstract class GreenBean extends Script {
+abstract class Pea extends Script {
 
     public static ArrayList<Pod> pods = new ArrayList<>()
 

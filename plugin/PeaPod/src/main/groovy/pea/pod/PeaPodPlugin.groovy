@@ -1,34 +1,32 @@
-package greenbean.pods
+package pea.pod
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
 import org.gradle.api.plugins.PluginAware
+import pea.pod.extension.PeaPodExt
 
 /**
- * Green Bean Pods
+ * PeaPodPlugin
  *
- * @since 2018.11.7
- * @author jacky
+ * @author JackyWang since 2018.11.7
  */
-class GreenBeanPods implements Plugin<PluginAware> {
+class PeaPodPlugin implements Plugin<PluginAware> {
 
-    private String dslPath = "greenbean.pods/PodsSpec.groovy"
+    def TAG = "PeaPodPlugin"
+    def dslPath = "gradle/pea_pod.gradle"
+    PeaPodExt peaPodExtension
 
     @Override
     void apply(PluginAware pluginAware) {
-        def isInclude = pluginAware instanceof Settings
-        def isReplace = pluginAware instanceof Project
-        if (isInclude) {
-            includePods(pluginAware)
-        } else if (isReplace) {
-            replacePods(pluginAware)
+        peaPodExtension = project.getExtensions().create("PeaPod", PeaPodExt)
+        if (pluginAware instanceof Settings) {
+            includeStage(pluginAware)
+        } else if (pluginAware instanceof Project) {
+            projectStage(pluginAware)
         }
     }
 
-    /**
-     * 加载依赖描述
-     */
     private void evaluateDSL(String path) {
         def shell = new GroovyShell(this.getClass().getClassLoader())
         // 加载内部DSL
@@ -47,11 +45,11 @@ class GreenBeanPods implements Plugin<PluginAware> {
      * @param pluginAware
      * @return
      */
-    void includePods(PluginAware pluginAware) {
+    def includeStage(PluginAware pluginAware) {
         def settings = (Settings) pluginAware
         def rootDir = settings.rootDir
-        evaluateDSL(rootDir.path + File.separator + dslPath)
-        GreenBean.pods.each { pod ->
+//        evaluateDSL(rootDir.path + File.separator + dslPath)
+        peaPodExtension.peaPods.each { pod ->
             if (pod.on_off) {
                 if (pod.path == null && pod.absPath == null) {
                     return
@@ -67,44 +65,40 @@ class GreenBeanPods implements Plugin<PluginAware> {
                     def proc = pod.cmd.execute()
                     def outputStream = new StringBuffer()
                     proc.waitForProcessOutput(outputStream, System.err)
-                    println "执行Hook命令:" + pod.cmd + " 结果:" + outputStream.toString()
+                    Log.i(TAG, "exec hook cmd:" + pod.cmd + " result:" + outputStream.toString())
                 }
-                // 切换分支
+                // checkout branch.
                 if (pod.branch != null && !pod.branch.isEmpty()) {
                     String cmd = "git -C " + path + " checkout " + pod.branch
                     def proc = cmd.execute()
                     def outputStream = new StringBuffer()
                     proc.waitForProcessOutput(outputStream, System.err)
-                    println "模块:" + pod.name + " 检出分支:" + pod.branch + " 结果:" + outputStream.toString()
+                    Log.i(TAG, "module:" + pod.name + " checkout:" + pod.branch + " result:" + outputStream.toString())
                 }
                 def projectName = ":" + pod.name
                 settings.include(projectName)
                 settings.project(projectName).projectDir = new File(path)
-                println("被包含的模块 名字:" + pod.name + " 路径:" + path)
+                Log.i(TAG, "included module name:" + pod.name + " path:" + path)
             }
         }
     }
 
-    /**
-     * 动态替换依赖
-     * @param pluginAware
-     * @return
-     */
-    void replacePods(PluginAware pluginAware) {
+    def projectStage(PluginAware pluginAware) {
         def project = (Project) pluginAware
-        evaluateDSL(project.rootDir.path + File.separator + dslPath)
+//        evaluateDSL(project.rootDir.path + File.separator + dslPath)
+        def peaPods = peaPodExtension.peaPods
         project.afterEvaluate {
             //寻找当前节点
-            def currentItem = GreenBean.pods.find {
+            def currentNode = peaPods.find {
                 project.name == it.name
             }
-            if (currentItem == null) return
+            if (currentNode == null) return
             // 寻找子节点
-            List<String> seeds = currentItem.seeds
+            List<String> seeds = currentNode.seeds
             if (seeds == null) return
             seeds.each { seedName ->
                 // 寻找子节点
-                def seed = GreenBean.pods.find {
+                def seed = peaPods.find {
                     it.name == seedName
                 }
                 if (seed == null) return
@@ -120,18 +114,23 @@ class GreenBeanPods implements Plugin<PluginAware> {
                         excludeModule = seed.name
                         map.put("module", excludeModule)
                         map.put("group", excludeGroup)
-                        project.configurations.compile.exclude(map)
+//                        project.configurations.compile.exclude(map)
+                        project.configurations.each {
+                            it.exclude(map)
+                        }
                     } else {
                         seed.excludes.each {
                             Map<String, String> map = new HashMap<>()
                             excludeModule = it
                             map.put("module", excludeModule)
                             map.put("group", excludeGroup)
-                            project.configurations.compile.exclude(map)
+                            project.configurations.each {
+                                it.exclude(map)
+                            }
                         }
                     }
-                    println("Project:" + currentItem.name + " exclude online dependence,group:" + excludeGroup + " module:" + excludeModule)
-                    // 添加本地依赖
+                    Log.i(TAG, "Project:" + currentNode.name + " exclude online dependence, group:" + excludeGroup + " module:" + excludeModule)
+                    // add local module.
                     StringBuilder buildTypes = new StringBuilder()
                     if (seed.buildTypes == null || seed.buildTypes.size() == 0) {
                         buildTypes.append("api")
@@ -142,11 +141,11 @@ class GreenBeanPods implements Plugin<PluginAware> {
                             if (project.configurations.findByName(buildType) != null) {
                                 project.dependencies.add(buildType, project.dependencies.project([path: ":" + seed.name]))
                             } else {
-                                System.err.println "Replace dependency error , build type " + buildType + " not exists."
+                                Log.e(TAG, "Replace dependency error , build type " + buildType + " not exists.")
                             }
                         }
                     }
-                    println("Project:" + currentItem.name + " add local dependence,config name:" + buildTypes.toString() + " path:" + seed.name)
+                    Log.i(TAG, "Project:" + currentNode.name + " add local dependence, build type:" + buildTypes.toString() + " path:" + seed.name)
                 }
             }
         }

@@ -1,0 +1,16 @@
+apply plugin: 'groovy'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+
+    }
+}
